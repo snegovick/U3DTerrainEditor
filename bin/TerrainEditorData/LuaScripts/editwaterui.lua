@@ -9,7 +9,8 @@ function EditWaterUI:Start()
 	self:SubscribeToEvent("Pressed", "EditWaterUI:HandleButtonPress")
 	self:SubscribeToEvent("SliderChanged", "EditWaterUI:HandleSliderChanged")
 
-	self.panel.style=uiStyle
+	--self.panel.defaultStyle = uiStyle
+	--self.panel.style=uiStyle
 	ui.root:AddChild(self.panel)
 	self.active=true
 

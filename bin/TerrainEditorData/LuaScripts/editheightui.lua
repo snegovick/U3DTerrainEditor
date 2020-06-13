@@ -9,7 +9,7 @@ function EditHeightUI:Start()
 	self:SubscribeToEvent("Pressed", "EditHeightUI:HandleButtonPress")
 	self:SubscribeToEvent("SliderChanged", "EditHeightUI:HandleSliderChanged")
 
-	self.panel.style=uiStyle
+	--self.panel.defaultStyle=uiStyle
 	ui.root:AddChild(self.panel)
 	self.active=true
 

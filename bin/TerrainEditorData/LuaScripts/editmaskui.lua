@@ -5,7 +5,7 @@ EditMaskUI=ScriptObject()
 function EditMaskUI:Start()
 	self.panel=ui:LoadLayout(cache:GetResource("XMLFile", "UI/TerrainEditMaskBrush.xml"))
 
-	self.panel.style=uiStyle
+	--self.panel.style=uiStyle
 	ui.root:AddChild(self.panel)
 	self.panel.visible=false
 	self.active=false

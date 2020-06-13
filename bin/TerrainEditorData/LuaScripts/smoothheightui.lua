@@ -5,7 +5,6 @@ SmoothHeightUI=ScriptObject()
 function SmoothHeightUI:Start()
 	self.panel=ui:LoadLayout(cache:GetResource("XMLFile", "UI/TerrainEditSmoothBrush.xml"))
 
-	self.panel.style=uiStyle
 	ui.root:AddChild(self.panel)
 	self.panel.visible=false
 	self.active=false

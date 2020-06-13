@@ -46,7 +46,7 @@ function Spline:AddKnot(worldpos)
 	model.material=self.flagmat --:Clone()
 	model.model=cache:GetResource("Model", "Models/Flag.mdl")
 	model.castShadows=false
-	local ht=TerrainState:GetTerrain():GetHeight(Vector3(groundx,0,groundz))
+	local ht=TerrainState:GetHeightValue(worldpos)
 	--local ht=TerrainState:GetHeightValue(worldpos)
 	waynode.position=Vector3(worldpos.x, ht, worldpos.z)
 	waynode.scale=Vector3(0.25,0.25,0.25)

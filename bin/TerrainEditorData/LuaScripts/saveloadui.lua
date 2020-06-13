@@ -31,7 +31,7 @@ end
 function SaveLoadUI:Start()
 	--self.menu=ui:LoadLayout(cache:GetResource("XMLFile", "UI/TerrainEditSaveLoadMenu.xml"))
 	self.menu=ui:LoadLayout(cache:GetResource("XMLFile", "UI/TerrainSettings.xml"))
-	self.menu.style=uiStyle
+	--self.menu.style=uiStyle
 	self.menu.visible=true
 
 	ui.root:AddChild(self.menu)

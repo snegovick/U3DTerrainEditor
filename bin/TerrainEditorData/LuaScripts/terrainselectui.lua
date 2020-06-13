@@ -5,7 +5,6 @@ TerrainSelectUI=ScriptObject()
 
 function TerrainSelectUI:Start()
 	self.panel=ui:LoadLayout(cache:GetResource("XMLFile", "UI/TerrainEditBlendBrush.xml"))
-	self.panel.style=uiStyle
 	ui.root:AddChild(self.panel)
 	self.panel.visible=false
 

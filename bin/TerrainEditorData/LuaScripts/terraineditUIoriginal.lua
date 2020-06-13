@@ -45,8 +45,8 @@ function TerrainEditUI:BuildUI()
 	self.smoothbrush:Deactivate()
 	self.heightbrush:Deactivate()
 
-	self.newterrain.style=uiStyle
-	self.toolbar.style=uiStyle
+	--self.newterrain.style=uiStyle
+	--self.toolbar.style=uiStyle
 
 	ui.root:AddChild(self.newterrain)
 	ui.root:AddChild(self.toolbar)

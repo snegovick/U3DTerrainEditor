@@ -18,15 +18,15 @@ function FilterUI:Start()
 	--self:SubscribeToEvent("Pressed", "FilterUI:HandleButtonPress")
 	--self:SubscribeToEvent("ItemSelected", "FilterUI:HandleItemSelected")
 	
-	
+
 	self.filterui=ui:LoadLayout(cache:GetResource("XMLFile", "UI/TerrainEditFilters.xml"))
 	self.filterlist=self.filterui:GetChild("FilterList", true)
 	self.filteroptions=self.filterui:GetChild("FilterOptions", true)
 	
 	local content=Window:new(context)
-	content.style=cache:GetResource("XMLFile", "UI/DefaultStyle.xml")
+	--content.style=cache:GetResource("XMLFile", "UI/DefaultStyle.xml")
 	self.filteroptions.contentElement=content
-	self.filterui.style=cache:GetResource("XMLFile", "UI/DefaultStyle.xml")
+	--self.filterui.style=cache:GetResource("XMLFile", "UI/DefaultStyle.xml")
 	ui.root:AddChild(self.filterui)
 	self.filterui.visible=false
 	
@@ -125,51 +125,56 @@ function FilterUI:BuildFilterOptions(filter)
 		--local window=Window:new(context)
 		local window=UIElement:new(context)
 		window.defaultStyle=uiStyle
-		window.style=uiStyle
+		--window.style=uiStyle
 		window.layoutMode=LM_HORIZONTAL
 		window.layoutBorder=IntRect(5,5,5,5)
 		local title=Text:new(context)
-		title.text=c.name
+		title:SetText(c.name)
 		title.defaultStyle=uiStyle
-		title.style=uiStyle
+		title:SetStyleAuto()
+		--title.style=uiStyle
 		window:AddChild(title)
 		
 		if c.type=="flag" then
-			local check=window:CreateChild("CheckBox")--CheckBox:new(context)
-			check.name=c.name
-			check.defaultStyle=uiStyle
-			check.style=uiStyle
-			if c.value==true then check.checked=true
-			else check.checked=false
+			local check=window:CreateChild("CheckBox")
+			check:SetName(c.name)
+			check:SetStyleAuto()
+			if c.value==true then
+				check:SetChecked(true)
+				print("Checked")
+			else
+				check:SetChecked(false)
+				print("unChecked")
 			end
 			window.size=IntVector2(title.size.x+check.size.x, 15)
 		elseif c.type=="value" then
 			local edit=window:CreateChild("LineEdit")--LineEdit:new(context)
-			edit.name=c.name
-			edit.defaultStyle=uiStyle
-			edit.style=uiStyle
-			edit.textElement.text=tostring(c.value)
+			edit:SetName(c.name)
+			edit:SetMinHeight(24)
+			edit:SetStyleAuto()
+			edit:SetText(tostring(c.value))
+			edit:SetCursorPosition(0)
 			window.size=IntVector2(title.size.x+edit.size.x, 15)
 		elseif c.type=="string" then
 			local edit=window:CreateChild("LineEdit")--LineEdit:new(context)
-			edit.name=c.name
-			edit.defaultStyle=uiStyle
-			edit.style=uiStyle
-			edit.textElement.text=c.value
+			edit:SetName(c.name)
+			edit:SetStyleAuto()
+			edit:SetMinHeight(24)
+			edit:SetCursorPosition(0)
+			edit:SetText(tostring(c.value))
 			window.size=IntVector2(title.size.x+edit.size.x, 15)
 		elseif c.type=="list" then
 			local dlist=window:CreateChild("DropDownList")--DropDownList:new(context)
-			dlist.defaultStyle=uiStyle
-			dlist.style=AUTO_STYLE
+			dlist:SetStyleAuto()
 			dlist:SetAlignment(HA_LEFT, VA_CENTER)
-			dlist.name=c.name
+			dlist:SetName(c.name)
 			dlist.resizePopup=true
 			
 			local i
 			for _,i in ipairs(c.list) do
 				local t=Text:new(context)
+				t:SetStyleAuto()
 				t.name=i
-				t.style=uiStyle
 				t.text=i
 				dlist:AddItem(t)
 			end
@@ -181,8 +186,7 @@ function FilterUI:BuildFilterOptions(filter)
 			local splines=scene_:GetScriptObject("SplineUI")
 			if splines then
 				local dlist=window:CreateChild("DropDownList")
-				dlist.defaultStyle=uiStyle
-				dlist.style=AUTO_STYLE
+				dlist:SetStyleAuto()
 				dlist:SetAlignment(HA_LEFT, VA_CENTER)
 				dlist.name=c.name
 				dlist.resizePopup=true
@@ -190,14 +194,14 @@ function FilterUI:BuildFilterOptions(filter)
 				local i
 				if #splines.groups==0 then
 					local t=Text:new(context)
-					t.style=uiStyle
+					t:SetStyleAuto()
 					t.text="None"
 					t.name="None"
 					dlist:AddItem(t)
 				else
 					for _,i in ipairs(splines.groups) do
 						local t=Text:new(context)
-						t.style=uiStyle
+						t:SetStyleAuto()
 						t.text=i.name
 						t.color=i.color
 						t.name=i.name
@@ -226,20 +230,39 @@ function FilterUI:PopulateFilterList()
 	local list=self.filterlist:GetChild("List", true)
 	if list==nil then return end
 	list:RemoveAllItems()
-	
-	local filters=fileSystem:ScanDir(fileSystem:GetProgramDir().."TerrainEditorData/LuaScripts/TerrainEditFilters", "*.lua", SCAN_FILES, false)
-	if filters==nil then print("Uh oh")
-	else
-		local c
-		for _,c in ipairs(filters) do
-			local filter=dofile("TerrainEditorData/LuaScripts/TerrainEditFilters/"..c)
-			print(c)
-			self.filters[filter.name]=filter
-			local uielement=Text:new(context)
-			uielement.style="EditorEnumAttributeText"
-			uielement.text=filter.name
-			uielement.name=filter.name
-			list:AddItem(uielement)
-		end
+
+  print("CWD: "..fileSystem:GetCurrentDir())
+  -- This code segfaults inside of Urho3D for some reason
+  --print("PD: "..fileSystem:GetProgramDir())
+  -- print("Scan for filters")
+	-- local filters=fileSystem:ScanDir(fileSystem:GetCurrentDir().."TerrainEditorData/LuaScripts/TerrainEditFilters", "*.lua", SCAN_FILES, false)
+  -- print("Filters: "..filters)
+	-- if filters==nil then print("Uh oh")
+	-- else
+  --    print("Loading filters")
+	-- 	local c
+	-- 	for _,c in ipairs(filters) do
+  --      print("Do file ".."TerrainEditorData/LuaScripts/TerrainEditFilters/"..c)
+	-- 		local filter=dofile("TerrainEditorData/LuaScripts/TerrainEditFilters/"..c)
+	-- 		print(c)
+	-- 		self.filters[filter.name]=filter
+	-- 		local uielement=Text:new(context)
+	-- 		uielement.style="EditorEnumAttributeText"
+	-- 		uielement.text=filter.name
+	-- 		uielement.name=filter.name
+	-- 		list:AddItem(uielement)
+	-- 	end
+	-- end
+	local filter_names = {'buildroad.lua', 'cavity.lua', 'cliffify.lua', 'erosion.lua', 'fillbasins.lua', 'fillbasinstomask.lua', 'fillbasinswater.lua', 'flow.lua', 'inciseflow.lua', 'riverbuilder.lua', 'roadbuilder2.lua'}
+	for i, name in ipairs(filter_names) do
+		print("Loading "..name)
+		local path = fileSystem:GetCurrentDir().."TerrainEditorData/LuaScripts/TerrainEditFilters/"..name
+		local filter=dofile(path)
+		self.filters[filter.name]=filter
+		local uielement=Text:new(context)
+		uielement.style="EditorEnumAttributeText"
+		uielement.text=filter.name
+		uielement.name=filter.name
+		list:AddItem(uielement)
 	end
 end
