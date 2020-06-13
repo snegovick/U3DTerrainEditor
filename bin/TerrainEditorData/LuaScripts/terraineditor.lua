@@ -39,6 +39,8 @@ TerrainState=TerrainEdit()
 g_rnd=KISS()
 g_rnd:setSeedTime()
 
+local confirm_exit_shown = false
+
 function Start()
 
     SampleStart()
@@ -167,7 +169,33 @@ function CreateInstructions()
 end
 
 function SubscribeToEvents()
-    SubscribeToEvent("Update", "HandleUpdate")
+   SubscribeToEvent("Update", "HandleUpdate")
+
+   SubscribeToEvent("KeyDown", "HandleKeyDown")
+
+   SubscribeToEvent("KeyUp", "HandleKeyUp")
+end
+
+function HandleKeyUp(eventType, eventData)
+   local key = eventData["Key"]:GetInt()
+   -- Close console (if open) or exit when ESC is pressed
+   if key == KEY_ESCAPE then
+      if (confirm_exit_shown == false) then
+         local panel=ui:LoadLayout(cache:GetResource("XMLFile", "UI/MessageBox.xml"))
+         panel:GetChild("TitleText", true):SetText("Confirm exit")
+         panel:GetChild("MessageText", true):SetText("All unsaved progress will be lost")
+         panel:GetChild("CancelButton", true):SetVisible(true)
+         SubscribeToEvent(panel:GetChild("OkButton", true), "Released", function (e) engine:Exit() end)
+         SubscribeToEvent(panel:GetChild("CancelButton", true), "Released", function (e) confirm_exit_shown=false; ui.root:RemoveChild(panel) end)
+         SubscribeToEvent(panel:GetChild("CloseButton", true), "Released", function (e) confirm_exit_shown=false; ui.root:RemoveChild(panel) end)
+         ui.root:AddChild(panel)
+         confirm_exit_shown = true;
+      end
+   end
+end
+
+function HandleKeyDown(eventType, eventData)
+   local key = eventData["Key"]:GetInt()
 end
 
 function HandleUpdate(eventType, eventData)
