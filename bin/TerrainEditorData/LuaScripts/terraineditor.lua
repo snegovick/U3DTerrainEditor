@@ -178,7 +178,6 @@ end
 
 function HandleKeyUp(eventType, eventData)
    local key = eventData["Key"]:GetInt()
-   -- Close console (if open) or exit when ESC is pressed
    if key == KEY_ESCAPE then
       if (confirm_exit_shown == false) then
          local panel=ui:LoadLayout(cache:GetResource("XMLFile", "UI/MessageBox.xml"))
