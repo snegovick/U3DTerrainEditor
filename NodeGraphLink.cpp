@@ -62,7 +62,7 @@ int NodeGraphLinkSource::GetNumLinks()
 
 NodeGraphLink *NodeGraphLinkSource::GetLink(int which)
 {
-    return (which>=0 && which<(int)links_.Size()) ? links_[which] : 0;
+  return (which>=0 && which<(int)links_.Size()) ? links_[which] : (NodeGraphLink *)NULL;
 }
 
 NodeGraphLink *NodeGraphLinkSource::GetLink(NodeGraphLinkDest *target)
